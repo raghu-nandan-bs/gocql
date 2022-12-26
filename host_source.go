@@ -672,18 +672,30 @@ func (r *ringDescriber) refreshRing() error {
 	if err != nil {
 		return err
 	}
+	if gocqlDebug {
+		r.session.logger.Printf("gocql: refresh ring: got hosts: %v\n", hosts)
+	}
 
 	prevHosts := r.session.ring.currentHosts()
 
 	// TODO: move this to session
 	for _, h := range hosts {
 		if r.session.cfg.filterHost(h) {
+			if gocqlDebug {
+				r.session.logger.Printf("gocql: host filter disabled for host: %v\n", h)
+			}
 			continue
 		}
 
 		if host, ok := r.session.ring.addHostIfMissing(h); !ok {
+			if gocqlDebug {
+				r.session.logger.Printf("gocql: adding host to connect pool: %v\n", h)
+			}
 			r.session.startPoolFill(h)
 		} else {
+			if gocqlDebug {
+				r.session.logger.Printf("gocql: host exists in ring, updating: %v\n", h)
+			}
 			host.update(h)
 		}
 		delete(prevHosts, h.HostID())
@@ -693,6 +705,9 @@ func (r *ringDescriber) refreshRing() error {
 	// in a session so that everything sees a consistent state. Becuase as is today
 	// events can come in and due to ordering an UP host could be removed from the cluster
 	for _, host := range prevHosts {
+		if gocqlDebug {
+			r.session.logger.Printf("gocql: removing host from pool : %v\n", host)
+		}
 		r.session.removeHost(host)
 	}
 

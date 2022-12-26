@@ -225,6 +225,9 @@ func (s *Session) handleNewNode(ip net.IP, port int) {
 
 	host, ok := s.ring.getHostByIP(ip.String())
 	if ok && host.IsUp() {
+		if gocqlDebug {
+			s.logger.Printf("gocql: Session.handleNewNode: fetched host %s:%d from current ring, nothing else to do.\n", ip.String(), port)
+		}
 		return
 	}
 
