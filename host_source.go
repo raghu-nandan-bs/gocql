@@ -342,6 +342,8 @@ func (h *HostInfo) update(from *HostInfo) {
 	h.rpcAddress = from.rpcAddress
 	h.preferredIP = from.preferredIP
 	h.connectAddress = from.connectAddress
+	// need to update hostname too
+	h.hostname = from.connectAddress.String()
 
 	if h.port == 0 {
 		h.port = from.port
