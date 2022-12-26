@@ -324,6 +324,7 @@ func (h *HostInfo) Port() int {
 
 func (h *HostInfo) update(from *HostInfo) {
 	if h == from {
+		fmt.Printf("DEBUG:: Host update: both are found to be equal : %v, %v", h, from)
 		return
 	}
 
