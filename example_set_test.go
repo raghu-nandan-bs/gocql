@@ -2,7 +2,7 @@ package gocql_test
 
 import (
 	"fmt"
-	"github.com/gocql/gocql"
+	"github.com/raghu-nandan-bs/gocql"
 	"log"
 	"sort"
 )

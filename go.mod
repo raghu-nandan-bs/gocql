@@ -1,4 +1,4 @@
-module github.com/gocql/gocql
+module github.com/raghu-nandan-bs/gocql
 
 go 1.19
 
