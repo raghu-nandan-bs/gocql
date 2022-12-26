@@ -267,6 +267,11 @@ func (s *Session) handleNodeUp(eventIp net.IP, eventPort int) {
 
 	host, ok := s.ring.getHostByIP(eventIp.String())
 	if !ok {
+		// IP isnt recognised, we should probably refresh ring?
+		// Node with same UID, might have new IP assigned after it is UP.
+		if err := s.hostSource.refreshRing(); err != nil && gocqlDebug {
+			s.logger.Println("failed to refresh ring:", err)
+		}
 		return
 	}
 
