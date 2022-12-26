@@ -697,6 +697,14 @@ func (r *ringDescriber) refreshRing() error {
 				r.session.logger.Printf("gocql: host exists in ring, updating: %v\n", h)
 			}
 			host.update(h)
+			if host.connectAddress != h.connectAddress {
+				// refresh existing connections since connection address changed
+				if gocqlDebug {
+					r.session.logger.Printf("gocql: refreshing connections for host: %v with new IP: %v\n", h.hostId, h.connectAddress)
+				}
+				r.session.pool.removeHost(host.hostId)
+				r.session.pool.addHost(h)
+			}
 		}
 		delete(prevHosts, h.HostID())
 	}
